@@ -9,4 +9,4 @@ University of Salzburg, Austria.
 The code was tested using the following setup:
 
 * 4x3.60 GHz AMD FX-4100 CPU, 12GB main memory, Linux Mint 17.
-* `python3` in version 3.4.3
+* `python` in version 2.7.6
