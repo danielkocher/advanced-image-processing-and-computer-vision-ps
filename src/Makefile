@@ -1,7 +1,7 @@
 default: all
 
 all: irs.py
-	python3 irs.py
+	python irs.py
 
 clean:
 	rm -f *.pyc
