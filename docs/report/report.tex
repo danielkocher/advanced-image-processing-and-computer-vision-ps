@@ -1,0 +1,74 @@
+\documentclass{vldb}
+
+%%% Packages
+\usepackage{graphicx}
+\usepackage{balance}
+\usepackage{tikz}
+\usepackage{standalone}
+\usepackage{subfigure}
+\usepackage{colortbl}
+
+%%% TikZ libraries
+\usetikzlibrary{backgrounds, positioning, decorations.pathreplacing, calc, fit}
+\usetikzlibrary{shapes}
+
+%%% Macros
+\newcommand{\tbr}{\textbf{[TO BE REVISED]}}
+\newcommand{\tbd}{\textbf{[TO BE DONE]}}
+
+\newcommand\diag[4]{%
+  \multicolumn{1}{p{#2}|}{\hskip-\tabcolsep
+  $\vcenter{\begin{tikzpicture}[baseline=0,anchor=south west,inner sep=#1]
+  \path[use as bounding box] (0,0) rectangle (#2+2\tabcolsep,\baselineskip);
+  \node[minimum width={#2+2\tabcolsep-\pgflinewidth},
+        minimum  height=\baselineskip+\extrarowheight-\pgflinewidth] (box) {};
+  \draw[line cap=round] (box.north west) -- (box.south east);
+  \node[anchor=south west] at (box.south west) {#3};
+  \node[anchor=north east] at (box.north east) {#4};
+ \end{tikzpicture}}$\hskip-\tabcolsep}}
+
+\begin{document}
+
+% Title
+\title{Building an Image Recognition System}
+\subtitle{Technical Report}
+
+% Author(s)
+\numberofauthors{1}
+
+\author{
+\alignauthor
+	Daniel Kocher\\
+  \affaddr{Department of Computer Sciences \\ University of Salzburg}\\
+  \email{Daniel.Kocher@stud.sbg.ac.at}
+}
+
+\maketitle
+
+\begin{abstract}
+\tbd
+\end{abstract}
+
+\section{Introduction}
+\label{sec:introduction}
+
+\tbd
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+\tbd
+
+%\clearpage
+% balance columns on last page
+%\balance
+
+%\bibliographystyle{abbrv}
+%\bibliography{paper}
+
+% short hack to beautify last page
+%\foreach \x in {1, ..., 6}{
+%    \vphantom{1} \par
+%}
+
+\end{document}
