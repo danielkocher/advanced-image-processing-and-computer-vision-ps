@@ -4,7 +4,7 @@ all: default
 
 default: $(FILENAME).tex
 	pdflatex $(FILENAME).tex
-	#bibtex $(FILENAME).aux
+	bibtex $(FILENAME).aux
 	pdflatex $(FILENAME).tex
 	pdflatex $(FILENAME).tex
 

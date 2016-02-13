@@ -31,7 +31,7 @@
 
 % Title
 \title{Building an Image Recognition System}
-\subtitle{Technical Report}
+\subtitle{Project Report}
 
 % Author(s)
 \numberofauthors{1}
@@ -46,11 +46,56 @@
 \maketitle
 
 \begin{abstract}
-\tbd
+Automatic understanding of images (and videos) is a challenging problem in
+computer vision. There exist different low- and high-level approaches to tackle
+this problem.
+
+In this paper, a project is presented which uses high-level a approach, i.e. an
+attribute database. Out of this database, a Bag-of-Visual-Words (BoW)
+representation is obtained and classifiers are trained for each attribute in the
+database. The effectiveness of these classifiers is then evaluated.
 \end{abstract}
 
 \section{Introduction}
 \label{sec:introduction}
+
+Representing scenes can be done on different levels: there exist
+low-level approaches, e.g. the \emph{spatial pyramid}~\cite{Lazebnik:2006}, and
+higher-level approaches, like the SUN Attribute Database~\cite{Patterson:2012}.
+
+
+\section{General approach}
+\label{sec:general-approach}
+
+\tbd
+
+\subsection{High-Level Pipeline}
+\label{subsec:high-level-pipeline}
+
+\tbd
+
+\subsection{Feature Extraction}
+\label{subsec:feature-extraction}
+
+\tbd
+
+\subsection{Bag-of-Visual-Words}
+\label{subsec:bovw}
+
+\tbd
+
+\subsection{Clustering}
+\label{subsec:clustering}
+
+\tbd
+
+\section{Implementational Details}
+\label{sec:implementational-details}
+
+\tbd
+
+\section{Experiments}
+\label{sec:experiments}
 
 \tbd
 
@@ -61,10 +106,10 @@
 
 %\clearpage
 % balance columns on last page
-%\balance
+\balance
 
-%\bibliographystyle{abbrv}
-%\bibliography{paper}
+\bibliographystyle{abbrv}
+\bibliography{report}
 
 % short hack to beautify last page
 %\foreach \x in {1, ..., 6}{
