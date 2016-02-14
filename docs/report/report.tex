@@ -50,58 +50,59 @@ Automatic understanding of images (and videos) is a challenging problem in
 computer vision. There exist different low- and high-level approaches to tackle
 this problem.
 
-In this paper, a project is presented which uses a high-level approach, i.e. an
+In this paper, a project is presented which uses a higher-level approach, i.e. an
 attribute database. Based upon this database, a Bag-of-Visual-Words (BoW)
 representation is obtained and classifiers are trained for each attribute in the
-database. The effectiveness of these classifiers is then evaluated.
-
-\tbr
+database. The average precision of these classifiers is then evaluated for
+different parameters. Furthermore, these classifiers are then used to do scene
+recognition based on attribute classifiction. Again, the predictive power of this
+approach is evaluated for different parameter configurations.
 \end{abstract}
 
 \section{Introduction}
 \label{sec:introduction}
 
-Representing scenes can be done on different levels: there exist
-low-level approaches, e.g. the \emph{spatial pyramid}~\cite{Lazebnik:2006}, and
-higher-level approaches, like attribute databases. 
+Representing images can be done on different levels: there exist
+low-level approaches, e.g. the \emph{spatial pyramid}~\cite{Lazebnik:2006} which
+take spatial information into account, and higher-level approaches, like attribute
+databases.
 
-Attribute databases represent image in terms of present or absent attributes.
-Such a representation is considered interpretable because it is intuitive for
-human beings to describe an image in terms of attributes. For example, consider
-an image of the Caribbean beach in the summer. Humans see the sun, the ocean,
-the beach, people sunbathing, some boats and the horizon. Then an intuitive
-description of the image would be e.g. sunny, water/sea, sleeping, crowded,
-boating, sandy and sky. If another human being not only reads this description,
-he/she will probably predict an image of a crowded beach in the summer. So,
-the attributes representation is a so-called \emph{semantic encoding} of images.
-Moreover, attributes are machine-detectable which is important (otherwise it would
-be useless).
+Attribute databases represent images in terms of present or absent attributes.
+Such a representation is considered \emph{interpretable} because it is intuitive
+for human beings to describe an image in terms of attributes. For example,
+consider an image of the Caribbean beach in the summer. Humans see the sun, the
+ocean, the beach, people sunbathing, some boats and the horizon. Then, an
+intuitive description of this image would be e.g. sunny, water/sea, sleeping,
+crowded, boating, sandy and sky. If another human being reads such a description,
+he/she will probably predict an image of a crowded beach in the summer. Hence,
+the image representation through attributes is a so-called
+\emph{semantic encoding} of images. Moreover, attributes are machine-detectable
+which is important (otherwise it would be useless in image processing).
 
-For this project, the SUN Attribute Database~\cite{Patterson:2012} was used, hence
+For this project, the SUN Attribute Database~\cite{Patterson:2012} is used, hence
 we will always refer to this database when talking about attribute databases.
 Using such a database, one can train a classifier for each of these attributes
 which can then be used to predict attribute presence for a given, previously
-unseen image. When we proceed like this using all 102 classsifiers, we can
-represent an image as a 102-dimensional vector which describes the image, again,
-in terms of 102 attributes.
+unseen image. When we proceed like this, we get $n$ classsifiers if there are $n$
+attributes provided by the database. Next, we can represent an image as a
+$n$-dimensional vector which describes the image, again, in terms of $n$
+attributes.
 
-This enables us to extract such 102-dimensional vectors from another set of
-images. This set of images contains 15 scenes~\cite{Lazebnik:2006} and these can
-be used to train another classifier to predict scenes based on 102-dimensional
-vectors.
+This enables us to extract such $n$-dimensional vectors from another set of
+images. This set of images contains $m$ scenes which can be used to train another
+(nearest neighbors) classifier to predict scenes based on a given $n$-dimensional
+attribute vector of a previously unseen image. The used scene database was created
+by Lazebnik et al.~\cite{Lazebnik:2006}.
 
 The remainder of this paper is organized as follows.
 Section~\ref{sec:general-approach} describes the general approach (the pipeline)
 of the project. It also contains more detailed information about the main
 concepts used in the pipeline, i.e. a description of the image databases, the
 feature extraction in use, the codebook generation and the scene recognition.
-Section~\ref{sec:implementational-details} summarizes some implementational
+Section~\ref{sec:implementation-details} summarizes some implementational
 details and assumptions, Section~\ref{sec:results} shows some results of the
 evaluation of this project and, finally, Section~\ref{sec:conclusion} concludes
 this report.
-
-\tbr
-
 
 \section{General approach}
 \label{sec:general-approach}
