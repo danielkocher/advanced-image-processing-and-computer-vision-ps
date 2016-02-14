@@ -5,8 +5,8 @@
 \usepackage{balance}
 \usepackage{tikz}
 \usepackage{standalone}
-\usepackage{subfigure}
 \usepackage{colortbl}
+\usepackage{subcaption}
 
 %%% TikZ libraries
 \usetikzlibrary{backgrounds, positioning, decorations.pathreplacing, calc, fit}
@@ -81,6 +81,7 @@ which is important (otherwise it would be useless in image processing).
 
 For this project, the SUN Attribute Database~\cite{Patterson:2012} is used, hence
 we will always refer to this database when talking about attribute databases.
+B
 Using such a database, one can train a classifier for each of these attributes
 which can then be used to predict attribute presence for a given, previously
 unseen image. When we proceed like this, we get $n$ classsifiers if there are $n$
@@ -363,8 +364,6 @@ to predict the scene of each 87-/102-dimensional vector (of a test image).
 \section{Implementation Details}
 \label{sec:implementation-details}
 
-This section contains some details about the actual implementation.
-
 The whole project is implemented in Python 2.7.6. Feature extraction and image
 processing in general is done using OpenCV 3.1 and scikit learn is used
 for classifiers, scaler and clustering.
@@ -378,64 +377,104 @@ makes sure that
   \item training and test sets are disjoint
 \end{enumerate}
 
+\begin{figure*}
+  \centering
+  \begin{subfigure}{\textwidth}
+    \includegraphics[width = \textwidth]{figs/scores_asymmetric_512classes_balanced.eps}
+    \caption{Asymmetric splits, $k = 512$ clusters, balanced}
+    \label{subfig:scores-classifiers-asymmetric-512-balanced}
+  \end{subfigure}
+  \begin{subfigure}{\textwidth}
+    \includegraphics[width = \textwidth]{figs/scores_symmetric_512classes_unbalanced.eps}
+    \caption{Symmetric splits, $k = 512$ clusters, unbalanced}
+    \label{subfig:scores-classifiers-symmetric-512-unbalanced}
+  \end{subfigure}
+  \caption{Average scores and standard deviation of attribute classifiers}
+  \label{fig:scores-classifiers-512}
+\end{figure*}
+
 Using the newest stable release of OpenCV 3.1 caused an inconvenience concerning
 the \emph{Dense} SIFT feature extraction because in this version, Dense is not
-longer supported (as it was in version 2.x). Therefore an own grid had to generate
-in order to be able to use Dense SIFT (and not just SIFT).
+longer supported (as it was in version 2.x). Therefore, an own grid had to be
+generated in order to be able to use Dense SIFT (and not just SIFT).
 
-The scaler in use is a \texttt{MinMaxScaler} and the classifiers in the codebook
-generation are \texttt{LinearSVC} instances. For the $k$-means clustering, also
-the corresponding scikit learn class is used. Notice that only a random sample
-of the whole database is used to train the scaler and the $k$-means clustering.
-To be precise, approximately 10 Dense SIFT descriptors per image are used for this
-purpose.
+The scaler in use is a \texttt{MinMaxScaler}, scaling all values of a feature
+vector to $(0, 1)$, and the classifiers used in the codebook generation are
+\texttt{LinearSVC} instances. For the $k$-means clustering, also the corresponding
+scikit learn class is used. Notice that only a random sample of the whole database
+is used to train the scaler and the $k$-means clustering. To be precise,
+approximately 10 Dense SIFT descriptors per image are used for this purpose.
 
 To execute the project, one may need to adjust the settings (in
-\texttt{settings/settings.py}). Here all required paths, files and parameters
+\texttt{settings/settings.py}). Here, all required paths, files and parameters
 can be configured.
-
-\tbr
 
 \section{Results}
 \label{sec:results}
+All the results shown in this section used $k$-means clustering with $k = 512$.
+We also did the same experiments using $k = 256$ clusters but we observed that
+varying this parameters does not change the results significantly.
 
-In this section, the experiments are discussed and some results are presented.
+In the first experiment, the average precision of the attribute classifiers was
+evaluated for the two different modes:
+\begin{enumerate}
+  \item \emph{balanced asymmetric} mode, i.e. training data contained 150 negative
+    and 150 positive samples, and test data contained 50 negative and 50
+    positive samples
+  \item \emph{unbalanced symmetric} mode, i.e. training and test data contained
+    500 negative and 25 positive samples, respectively
+\end{enumerate}
 
-\begin{figure*}[ht]
-  \centering
-  \includegraphics[width = \textwidth]{figs/scores_asymmetric_512classes.eps}
-  \caption{Average scores and standard deviation of attribute classifiers
-    (asymmetric splits, $k = 512$ clusters)
-  }
-  \label{fig:scores-classifiers-asymmetric-512}
-\end{figure*}
+The results are shown in Figure~\ref{fig:scores-classifiers-512}. As we can see
+in Figure~\ref{subfig:scores-classifiers-asymmetric-512-balanced}, the average
+precision (and standard deviation) of each attribute classifier never drops below
+about $55$\% and peaks for the attributes \emph{ocean} and \emph{far-away/horizon}
+with about $79$\%. Hence, even though we just used a linear support vector
+machine, the classification performs well for most of the attributes in the
+balanced case.
+
+In the unbalanced case, shown in 
+Figure~\ref{subfig:scores-classifiers-symmetric-512-unbalanced}, we get a much
+better average precision. All classifiers have an average precision of about
+$95$\%. However, this is mainly because of the imbalance of negative and positive
+samples in the training/test set. To confirm this, we also ran experiments with
+unbalanced asymmetric splits and balanced symmetric splits. We observed that the
+behavior in both cases was the same as in the Figures shown, i.e. the unbalanced
+asymmetric splits performed way better (with about $95$\% average precision)
+than the balanced symmetric splits (with about $50 - 80$\%). Moreover, the
+standard deviations are less in the unbalanced cases.
+
+In the second experiment, the precision with respect to scene categorization is
+evaluated. Although this was also done for all four splitting variantes, i.e.
+unbalanced/balanced asymmetric/symmetric, we only present two of them. This is
+due to the same reason as before, i.e. the asymmetric and symmetric splits behave
+similar if they are unbalanced/balanced. Therefore, we only show the difference
+between balanced and unbalanced splits of the asymmetric mode.
+
+The results can be seen in Figure~\ref{fig:scores-sr-asymmetric-512}. We
+observed that for scene recognition, the classifiers trained with balanced splits
+perform much better compared to the ones trained with unbalanced splits. The peak
+precision for balanced splits almost approaches the $90$\%. In contrast, in the
+unbalanced case, the best result is just slightly above $50$\%. However, there
+exist scenes, i.e. \emph{store}, \emph{PARoffice}, \emph{bedroom},
+\emph{industrial},  \emph{kitchen} and \emph{livingroom}, for which the prediction
+is incorrect for about $85 - 90$\% of the test scenes.
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width = .45\textwidth]{figs/scores_sr_asymmetric_512classes.eps}
-  \caption{Scores for scene recognition \newline (asymmetric splits, $k=512$ clusters)}
-  \label{fig:scores-scene-rec-asymmetric-512}
+  \begin{subfigure}{.45\textwidth}
+    \includegraphics[width = \textwidth]{figs/scores_sr_asymmetric_512classes_balanced.eps}
+    \caption{Asymmetric splits, $k = 512$ clusters, balanced}
+    \label{subfig:scores-sr-asymmetric-512-balanced}
+  \end{subfigure}
+  \begin{subfigure}{.45\textwidth}
+    \includegraphics[width = \textwidth]{figs/scores_sr_asymmetric_256classes_unbalanced.eps}
+    \caption{Aymmetric splits, $k = 512$ clusters, unbalanced}
+    \label{subfig:scores-sr-asymmetric-512-unbalanced}
+  \end{subfigure}
+  \caption{Scores for scene recognition}
+  \label{fig:scores-sr-asymmetric-512}
 \end{figure}
-
-In the first experiment, the asymmetric mode was used. This means the training
-data contains 150 negative samples and 150 positive samples, and the test data
-contains 50 negative samples and 50 positive samples. Furthermore, $k$ was set
-to $512$ for the $k$-means clustering.
-
-The first result, shown in Figure~\ref{fig:scores-classifiers-asymmetric-512},
-is the average precision (and standard deviation) of each attribute classifier.
-As we can see, the average precision never drops below about $55$\% and peaks
-for the attributes \emph{ocean} and \emph{far-away/horizon} with about $79$\%.
-Hence, even though we just used a linear support vector machine, the
-classification performs well for most of the attributes.
-
-Figure~\ref{fig:scores-scene-rec-asymmetric-512} shows the final results of the
-scene catogorization. It performs well for the \emph{MITforest} scenes,
-almost reaching $90$\% of correctly categorized images. However, we can also see
-that this approach performs bad for some scenes, e.g. \emph{PARoffice} and
-\emph{bedroom}, where the precision drops below $20$\%.
-
-\tbr
 
 \section{Conclusion}
 \label{sec:conclusion}
@@ -444,15 +483,14 @@ In this study, the building blocks of a basic image recognition system were
 discussed. The codebook generation based upon Dense SIFT feature vectors, linear
 support vector machines and $k$-means clustering was described. Furthermore, all
 necessary steps to implement a scene recognition based on predicted attribute
-vectors and a $k$-nearest neighbor classifier were specified. We presented some
-details about the actual implementation of the system described as well as the
-results of this project.
-
-\tbr
+vectors and a $k$-nearest neighbor classifier were specified. We also presented
+some details about the actual implementation of the system described. The results
+of the experiments have shown that the balancing of the training and test data
+influences the precision of both, the attribute and the scene classifiers.
 
 %\clearpage
 % balance columns on last page
-\balance
+%\balance
 
 %\clearpage
 \bibliographystyle{abbrv}
