@@ -17,8 +17,7 @@ import feature_extraction.feature_extraction as fe
 
 # Select 'size' random images from a list of candidates and store feature vectors
 # to avoid recomputation.
-def select_random_images (size, candidates, computed_feature_vectors,
-  constraints = None):
+def select_random_images (size, candidates, computed_feature_vectors):
   selected_candidates = []
   i = 0
   while i < size:
@@ -26,10 +25,6 @@ def select_random_images (size, candidates, computed_feature_vectors,
 
     # avoid duplicates
     if image in selected_candidates:
-      continue;
-
-    # make sure the constraints are not in the candidates list
-    if constraints != None and image in constraints:
       continue;
 
     if image in computed_feature_vectors:
@@ -44,6 +39,7 @@ def select_random_images (size, candidates, computed_feature_vectors,
 
     selected_candidates.append(image)
     i += 1
+    sys.stdout.flush()
   return selected_candidates
 
 #
@@ -68,15 +64,17 @@ def generate_splits (attribute, i_list, ic_list, mode, path,
     settings.train_test_sizes[mode]['train'][1], i_list,
     computed_feature_vectors
   )
-  # negative test samples
+  # negative test samples (make sure to not include train elements)
+  ic_list_tmp = [x for x in ic_list if x not in train_set[0]]
   test_set[0] = select_random_images(
-    settings.train_test_sizes[mode]['test'][0], ic_list,
-    computed_feature_vectors, train_set[0]
+    settings.train_test_sizes[mode]['test'][0], ic_list_tmp,
+    computed_feature_vectors
   )
-  # positive test samples
+  # positive test samples (make sure to not include train elements)
+  i_list_tmp = [x for x in i_list if x not in train_set[1]]
   test_set[1] = select_random_images(
-    settings.train_test_sizes[mode]['test'][1], i_list,
-    computed_feature_vectors, train_set[1]
+    settings.train_test_sizes[mode]['test'][1], i_list_tmp,
+    computed_feature_vectors
   )
 
   #shuffle(train_set[1])
@@ -110,7 +108,7 @@ def generate_splits (attribute, i_list, ic_list, mode, path,
 def learn_and_evaluate (attributes, ai_dict, aic_dict, mode, path,
   computed_feature_vectors, scaler, kmeanspp):
   aps_stds = []
-  total_number_of_positives = settings.train_test_sizes[mode]['train'][0] + settings.train_test_sizes[mode]['test'][0]
+  total_number_of_positives = settings.train_test_sizes[mode]['train'][1] + settings.train_test_sizes[mode]['test'][1]
   classifiers = {}
   for attribute in attributes:
     # for the asymmetric mode: only evaluate attributes, for which enough positive
@@ -194,6 +192,7 @@ def learn_and_evaluate (attributes, ai_dict, aic_dict, mode, path,
 # Note: This method has to make sure that the histograms are of equal
 # dimensionality in order to be able to use them in the SVM (fit)!
 def generate_histogram (predicted):
+  # generate 'class_count' empty histogram bins
   histogram = [float(0) for i in range(settings.class_count)]
   for p in predicted:
     histogram[p] += float(1)
