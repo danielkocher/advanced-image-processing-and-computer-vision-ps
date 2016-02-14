@@ -11,6 +11,8 @@ The code was tested using the following setup:
 * 4x3.60 GHz AMD FX-4100 CPU, 12GB main memory, Linux Mint 17.
 * `python` in version 2.7.6
 
+Some directories have to be present, see report and `src/settings/settings.py`.
+
 ### Remarks
 
 The k-means++ clustering uses 4 cores in parallel (by argument), so better make
