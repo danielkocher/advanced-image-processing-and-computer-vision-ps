@@ -56,7 +56,7 @@ def create (images, computed_feature_vectors, scaler):
 
   # do k-means clustering (512 clusters, k-means++, 4 cores, show information)
   kmeans = cluster.KMeans(n_clusters = settings.class_count, init = 'k-means++',
-    n_jobs = 4, verbose = 1
+    n_jobs = 4
   )
   # 10 SIFT descriptors per images (approximately)
   kmeans.fit(scaler.transform(
