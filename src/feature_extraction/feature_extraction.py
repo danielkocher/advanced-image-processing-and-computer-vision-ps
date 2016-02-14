@@ -68,7 +68,6 @@ def dense_sift (image, scale_size):
 
 #
 def preprocess_image (image, scale_size):
-  # TODO: try-catch
   gs_image = cv2.cvtColor(cv2.imread(image), cv2.COLOR_BGR2GRAY)
   return cv2.resize(gs_image, (scale_size, scale_size))
 
