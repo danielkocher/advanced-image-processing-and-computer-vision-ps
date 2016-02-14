@@ -250,16 +250,17 @@ and the scene recognition.
 \subsection{Clustering}
 \label{subsec:clustering}
 
-In order to do a codebook generation, we need a clustering mechanism. For this
-purpose we use $k$-means++ clustering, which is similar to the well-known
-$k$-means clustering but does not just pick random elements to start with.
+In order to generate a codebook, we need a clustering mechanism. For this
+purpose, we use $k$-means++ clustering, which is similar to the well-known
+$k$-means clustering but it initializes the cluster centers before executing the
+optimization iterations. This initialization guarantees to find a
+$O(\text{log} k)$ competitive solution (with respect to the optimal solution).
 Given a set of feature vectors, the $k$-means++ algorithm generates $k$ clusters
 during the training phase. In the prediction phase, it predicts the cluster for
-a given, potentially unknown feature vector. In this project, 512 clusters were
-used (this is adjustable in the first stage of
+a given, potentially unknown feature vector. The number of clusters and the number
+of classes are not necessarily equal. In the experiments, 256 and 512 clusters
+were used (this is adjustable in the first stage of
 Figure~\ref{fig:high-level-pipeline}).
-
-\tbr
 
 \subsection{Feature Extraction}
 \label{subsec:feature-extraction}
