@@ -43,10 +43,16 @@ def init ():
   }
   
   # 1 = positive sample, 0 = negative sample
+  # Entries:
+  #  1. asymmetric, sets balanced (50% negative samples, 50% positive samples)
+  #  2. asymmetric, sets unbalanced (95% negative samples, 5% positive samples)
+  #  3. symmetric, sets unbalanced (95% negative samples, 5% positive samples)
+  #  4. symmetric, sets balanced (50% negative samples, 50% positive samples)
   train_test_sizes = {
     'asymmetric' : { 'train' : [ 150, 150 ] , 'test' : [ 50, 50 ] },
-    #'asymmetric' : { 'train' : [ 6, 6 ], 'test' : [ 2, 2 ] },
-    'symmetric' : { 'train' : [ 150, 150 ], 'test' : [ 150, 150 ] }
+    #'asymmetric' : { 'train' : [ 450, 24 ], 'test' : [ 150, 8 ] },
+    'symmetric' : { 'train' : [ 500, 25 ], 'test' : [ 500, 25 ] }
+    #'symmetric' : { 'train' : [ 150, 150 ], 'test' : [ 150, 150] }
   }
 
   # initialize labels (1 = positive sample, 0 = negative sample)
