@@ -291,27 +291,34 @@ information into account). This would probably lead to better overall results.
 \subsection{Bag-of-Visual-Words}
 \label{subsec:bovw}
 
-To generate a codebook the feature extraction and the clustering, described in
-Section~\ref{subsec:feature-extraction} and~\ref{subsec:clustering}, respectively,
+To generate a codebook the clustering and the feature extraction, described in
+Section~\ref{subsec:clustering} and~\ref{subsec:feature-extraction}, respectively,
 are used.
 But first of all, we split the images of the SUN Attributes Database into 10
 training/test splits for each attribute. In the evaluation stage, the average
 precision and the standard deviation for all 10 splits are evaluated for each
 attribute. Because of the sparseness of some attributes, we have two different
-split modes, namely \emph{asymmetric} and \emph{symmetric}. The splits provided
+split modes, i.e. \emph{asymmetric} and \emph{symmetric}. The splits provided
 online by Patterson et al.~\cite{Patterson:2012} also have these two modes.
-We also use the same amounts of images as done by Patterson et al.:
+We also use the same amounts of images:
 \begin{description}
   \item[asymmetric] 300 training images (150 positive and 150 negative samples),
-    100 test images (150 positive and 150 negative samples)
+    100 test images (50 positive and 50 negative samples)
   \item[symmetric] 525 training images (25 positive and 500 negative samples),
     525 test images (25 positive and 500 negative samples)
 \end{description}
 
+As we can see, in the asymmetric mode, the sets are balanced, i.e. both sets
+(training and test set) have a the same number of positive and negative samples.
+In contrast, the sets in the symmetric mode are unbalanced, i.e. both sets contain
+$95$\% negative samples and only $5$\% positive samples. As we will see in the
+Results section, this influences the accuracy of the trained classifiers. Hence,
+we also experimented with unbalanced asymmetric and balanced symmetric splits.
+
 For each image in a both sets (training and test), the respective SIFT feature
 vector is computed. Then, the $k$-means++ clustering is used to assign each SIFT
-descriptor of the feature vector (namely 256) to one of the $k$ clusters (here
-$k=512$). Afterwards, a histogram with $k$ bins is generated. Each bin represents
+descriptor of the feature vector, i.e. 256, to one of the $k$ clusters.
+Afterwards, a histogram with $k$ bins is generated. Each bin represents
 a cluster and the previously assigned clusters are counted (height of a bin).
 
 The histograms of all training images are then used to train a classifier for each
@@ -322,23 +329,20 @@ classifiers in total. In the symmetric case, we get 1020 different classifiers.
 These classifiers are stored to use them again later on.
 
 Now, it is about time to evaluate the precision of the trained classifiers.
-Therefore we just use use the histograms of the test images as input for the
+Therefore, we just use the histograms of the test images as input for the
 classifier's predict function. The classifier returns 0 for \emph{attribute is
 not present} or 1 for \emph{attribute is present}. These results are compared
 against the reference results and the total precision is stored for each
 classifier instance. To conclude this stage, the average precision and the
 standard deviation are computed over all 10 instances of an attribute classifier.
 
-\tbr
-
 \subsection{Scene Recognition}
 \label{subsec:scene-recognition}
 
-This is the final computational stage (the results stage is just a presentation
-layer). In this stage, we also generate splits but this time splits for each of
-the 15 scenes. For each scene we use 80\% of the images as training data and the
-remaining 20\% as test data. This results in about 80\% training data and about
-20\% test data over all scenes.
+This is the final computational stage. In this stage, we also generate splits
+but this time splits for each of the 15 scenes. For each scene we use 80\% of
+the images as training data and the remaining 20\% as test data. This results in
+about 80\% training data and about 20\% test data over all scenes.
 
 After the splits are generated, the classifiers are utilized to predict attributes
 for a given image. For each image in the training data, we execute the predict
@@ -354,9 +358,7 @@ The nearest neighbor classifier is used to categorize given images represented
 as 87-/102-dimensional vectors. Therefore, we also predict the 87/102 attributes
 of the images in the test dataset to obtain 87-/102-dimensional vectors for
 these images. In the last step, we just used the $k$-nearest neighbor classifier
-to predict the scene of each test image.
-
-\tbr
+to predict the scene of each 87-/102-dimensional vector (of a test image).
 
 \section{Implementation Details}
 \label{sec:implementation-details}
@@ -452,6 +454,7 @@ results of this project.
 % balance columns on last page
 \balance
 
+%\clearpage
 \bibliographystyle{abbrv}
 \bibliography{report}
 
