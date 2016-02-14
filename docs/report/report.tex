@@ -266,16 +266,16 @@ Figure~\ref{fig:high-level-pipeline}).
 \label{subsec:feature-extraction}
 
 \emph{Dense Scale-Invariant Feature Transform} (Dense SIFT) is used to extract
-feature from images. Before extracting the actual feature, every image is scaled
-to the same size, namely $256\times256$, and converted to grayscale.
+features from images. Before extracting the actual feature, every image is scaled
+to the same size, i.e. $256\times256$, and converted to grayscale.
 \emph{Dense} SIFT, because we do not just let the SIFT algorithm detect keypoints
 but instead use a dense grid. This grid has a step size of $16$ between two
 keypoints (horizontally and vertically). For $256\times256$ pixels this results
 in a total number of $256$ keypoints ($16\times16$). Then, for each such keypoint,
 the SIFT algorithm is applied. This results in a total number of $256$
 $128$-dimensional feature vectors for each image.
-Figure~\ref{fig:dense-sift-example} shows an example image which all keypoints
-marked by a circle.
+Figure~\ref{fig:dense-sift-example} shows an example image in which all keypoints
+are marked by a circle.
 
 \begin{figure}
   \centering
@@ -286,9 +286,7 @@ marked by a circle.
 
 This method of feature extraction is used throughout the pipeline. It could also
 be replaced by more advanced feature extraction techniques (e.g. taking color
-information into account). This will probably lead to better overall results.
-
-\tbr
+information into account). This would probably lead to better overall results.
 
 \subsection{Bag-of-Visual-Words}
 \label{subsec:bovw}
