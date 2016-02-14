@@ -240,14 +240,12 @@ presented.
 \label{subsec:scaler}
 
 For the purpose of classification it is desirable to scale feature vectors. In
-our case, a scaler is created which is then used to project every value of the
-feature vectors to range $(0, 1)$. This scaler has to be created before doing any
-feature extraction (more precisely before any of the feature vectors is actually
+our case, a scaler is created which is then used to project every value of a
+feature vector to the range $(0, 1)$. This scaler has to be created before doing any
+feature extraction (more precisely, before any of the feature vectors is actually
 used). This is important because we need to use the same scaling for all steps
 involving feature vectors, namely the clustering, the codebook generation
 and the scene recognition.
-
-\tbr
 
 \subsection{Clustering}
 \label{subsec:clustering}
