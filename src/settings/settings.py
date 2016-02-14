@@ -25,8 +25,8 @@ def init ():
   global class_count
   global scene_train_ratio
 
-  data_dir = '/home/seniix/github/advanced-image-processing-and-computer-vision-ps/data/'
-  src_dir = '/home/seniix/github/advanced-image-processing-and-computer-vision-ps/src/'
+  data_dir = './../data/'
+  src_dir = './'
   images_dir = data_dir + 'images/'
   scaler_dir = src_dir + 'scaler/'
   kmeanspp_dir = src_dir + 'kmeanspp/'
