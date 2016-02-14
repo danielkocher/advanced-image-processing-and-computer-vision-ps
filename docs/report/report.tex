@@ -151,10 +151,11 @@ respectively.
 The high-level pipeline consists of 5 parts: Adjusting the settings if necessary,
 generating a scaler and a clustering, generating the codebook/bag-of-visual-words
 representation and training the classifiers, recognizing scenes based upon the
-trained classifiers and obtaining the results. Obviously, the 3 parts in the
-middle are the most important parts. In the following, we will discuss these three
-parts in more details. Figure~\ref{fig:high-level-pipeline} shows an illustration
-of the pipeline.
+predictions of the trained classifiers and obtaining the results.
+Figure~\ref{fig:high-level-pipeline} shows an illustration of the pipeline.
+Obviously, the 3 parts in the middle are the most important parts (highlighted
+with a red background). In the following, we will discuss these three parts (and
+their respective steps) in more detail.
 
 \begin{figure}
   \centering
@@ -163,13 +164,16 @@ of the pipeline.
     \def\minheight{\heightof{GENERATE SCALER/CLUSTERING} + 10pt}
     \node[draw, rectangle, thick, minimum width = \minwidth,
       minimum height = \minheight] at (0, 0) (settings) {\bfseries SETTINGS};
-    \node[draw, rectangle, thick, minimum width = \minwidth,
+    \node[draw, rectangle, thick, minimum width = \minwidth, fill = red,
+      opacity = 0.65, text opacity = 1, draw opacity = 1,
       minimum height = \minheight, below = 0.5 of settings] (scaler-clustering)
       {\bfseries GENERATE SCALER/CLUSTERING};
-    \node[draw, rectangle, thick, minimum width = \minwidth,
+    \node[draw, rectangle, thick, minimum width = \minwidth, fill = red,
+      opacity = 0.65, text opacity = 1, draw opacity = 1,
       minimum height = \minheight, below = 0.5 of scaler-clustering]
       (bow) {\bfseries GENERATE CODEBOOK/BOW};
-    \node[draw, rectangle, thick, minimum width = \minwidth,
+    \node[draw, rectangle, thick, minimum width = \minwidth, fill = red,
+      opacity = 0.65, text opacity = 1, draw opacity = 1,
       minimum height = \minheight, below = 0.5 of bow] (scene-recognition)
       {\bfseries RECOGNIZE SCENES};
     \node[draw, rectangle, thick, minimum width = \minwidth,
@@ -187,50 +191,50 @@ of the pipeline.
 \end{figure}
 
 The SETTINGS step is just a configuration step, where  parameters like
-the number of classes for the clustering or the number of training/test images per
+the number of clusters for the clustering or the number of training/test images per
 split can be configured.
 
-The second stage is quite obvious. First of all we need a consistent scaling of
-feature vectors throughout the pipeline. In the following, all feature vectors
-are considered scaled, even without explicitly stating it. Furthermore, we need
-a clustering mechanism which is used in the codebook generation. In this project,
-a simple $k$-means++ clustering is used. Of course, one could just replace both,
-the scaler and the clustering, by different/more advanced approaches.
+In the second stage, two mechanisms are calibrated to be used later on. First of
+all we need a consistent scaling of feature vectors throughout the pipeline. In
+the following, all feature vectors are considered scaled, even without explicitly
+stating it. Furthermore, we need a clustering mechanism which is used in the
+codebook generation. In this project, a simple $k$-means++ clustering is used.
+Of course, one could just replace both, the scaler and the clustering, by
+different or more advanced approaches.
 
-In the third stage, the codebook/bag-of-visual-words representation is obtained.
-This includes multiple steps, which are: 
+The codebook/bag-of-visual-words representation is obtained in the third stage.
+This includes multiple steps, i.e.: 
 \begin{enumerate}
-  \item For each attribute multiple training/test splits are generated on-the-fly
-  \item For each image of a split, feature vectors are obtained
-  \item These feature vectors are predicted using the previously generated
-    $k$-means++ clustering
+  \item Generate multiple training/test splits for each attribute
+  \item Compute feature vectors for each image of a split
+  \item Predict the clusters of these feature vectors (using the previously
+    generated $k$-means++ clustering)
   \item Generate histograms for each predicted feature vector
-  \item Using the histograms of training data, a classifier is trained for each
-    attribute
-  \item Using the histograms of test data, the classifier is evaluated for each
-    attribute (mean precision and standard deviation over all splits for an
+  \item Train a classifier for each attribute using the histograms of the training
+    data
+  \item Evaluate the classifiers for each attribute using the histograms of the
+    test data (mean precision and standard deviation over all splits for an
     attribute)
-  \item Classifiers are stored on the filesystem (to be used in the scene
-    recognition stage)
+  \item Store classifiers on the filesystem (to use them in the scene
+    recognition stage later on)
 \end{enumerate}
 
 Next up is the scene recognition stage which is also divided into multiple steps:
 \begin{enumerate}
-  \item The image of each scene is divided into training and test images
+  \item Divide the images of each scene into training and test data
   \item Extract the feature vector for each training image (this feature vector
     has to be consistent with the feature vector used in the previous stage)
-  \item Generate histograms for each feature vector 
+  \item Generate histogram for each feature vector 
   \item Use histograms as input for the classifiers to create an $n$-dimensional
     vector for each training image ($n$ is the number of classifiers/attributes)
   \item Train a $k$-nearest neighbor classifier using these $n$-dimensional
-    vectors and the corresponding scene name
+    vectors and the corresponding scene names
   \item Use $k$-nearest neighbor classifier to predict the test images (more
     precisely, their $n$-dimensional vectors)
 \end{enumerate}
 
-The last stage is the evaluation of the results.
-
-\tbr
+The last stage is just a presentation layer which indicates that the results are
+presented.
 
 \subsection{Scaler}
 \label{subsec:scaler}
